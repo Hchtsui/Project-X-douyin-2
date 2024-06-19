@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Home{% endblock %}
+
+{% block body %}
+    <div class="flex justify-center h-screen">
+        <div class="bg-black w-2/12 h-full"></div> <!-- Black bar on the left -->
+        <div class="flex flex-col items-center w-8/12 h-full overflow-y-auto">
+            <!-- Category Links -->
+            <div class="flex flex-wrap justify-center w-full mb-4">
+                {% for category in categories %}
+                    <div class="flex justify-center bg-white m-2 h-14 w-48 rounded shadow">
+                        <a href="{{ path('category_page', {id: category.id}) }}"
+                           class="hover:bg-gray-200 text-center p-4 w-full h-full">
+                            <h1 class="card-title text-lg font-bold">{{ category.name }}</h1>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Register/Login/Logout Links -->
+            {% if not app.user %}
+                <div class="flex flex-wrap justify-center w-full mb-4">
+                    <div class="flex justify-center bg-white m-2 h-14 w-48 rounded shadow">
+                        <a class="hover:bg-gray-200 text-center p-4 w-full h-full" href="{{ path('app_register') }}">Register</a>
+                    </div>
+                    <div class="flex justify-center bg-white m-2 h-14 w-48 rounded shadow">
+                        <a class="hover:bg-gray-200 text-center p-4 w-full h-full" href="{{ path('app_login') }}">Login</a>
+                    </div>
+                </div>
+            {% else %}
+                <div class="flex justify-center w-full mb-4">
+                    <div class="flex justify-center bg-white m-2 h-14 w-48 rounded shadow">
+                        <a class="hover:bg-gray-200 text-center p-4 w-full h-full" href="{{ path('app_logout') }}">Logout</a>
+                    </div>
+                </div>
+            {% endif %}
+
+            <!-- Video Container -->
+            <div id="video-container" class="w-full flex flex-col items-center space-y-4">
+                {% if videos is not empty %}
+                    {% for video in videos %}
+                        <div class="bg-white p-4 rounded shadow-md w-full max-w-md">
+                            <h3 class="text-lg font-semibold">{{ video.name }}</h3>
+                            <p>{{ video.description }}</p>
+                            <div class="video-embed">
+                                <iframe class="w-full h-96" src="{{ video.url }}?autoplay=1&mute=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                            <p class="text-sm text-gray-600">Tag: {{ video.tag }}</p>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No videos found.</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="bg-black w-2/12 h-full"></div> <!-- Black bar on the right -->
+    </div>
+{% endblock %}
+
+

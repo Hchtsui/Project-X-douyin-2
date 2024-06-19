@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ category.name }}{% endblock %}
+
+{% block body %}
+    <div class="flex justify-center h-screen">
+        <div class="bg-black w-2/12"></div> <!-- Black bar on the left -->
+        <div class="flex flex-wrap justify-center w-8/12">
+            <h1 class="text-center text-2xl font-bold my-4">{{ category.name }}</h1>
+            <div id="video-container" class="w-full mt-4">
+                {% if videos is not empty %}
+                    <ul class="w-full flex flex-wrap justify-center">
+                        {% for video in videos %}
+                            <li class="bg-white m-2 p-4 rounded shadow-md w-1/3">
+                                <h3 class="text-lg font-semibold">{{ video.name }}</h3>
+                                <p>{{ video.description }}</p>
+                                <a href="{{ video.url }}" class="text-indigo-600 hover:text-indigo-900">{{ video.url }}</a>
+                                <p class="text-sm text-gray-600">Tag: {{ video.tag }}</p>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No videos found for this category.</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="bg-black w-2/12"></div> <!-- Black bar on the right -->
+    </div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block body %}
+    <h1 class="mb-5 text-xl font-semibold">Register</h1>
+
+    {{ form_errors(registrationForm) }}
+
+    {{ form_start(registrationForm, {'attr': {'class': 'w-full max-w-sm mx-auto mt-20'}}) }}
+    {{ form_row(registrationForm.email, {'attr': {'class': 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}}) }}
+    {{ form_row(registrationForm.plainPassword, {
+        label: 'Password',
+        'attr': {'class': 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mt-4'}
+    }) }}
+    {{ form_row(registrationForm.agreeTerms, {'attr': {'class': 'form-checkbox mt-4'}}) }}
+
+    <button type="submit" class="mt-6 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+        Register
+    </button>
+    {{ form_end(registrationForm) }}
+{% endblock %}
+
+<script src="https://cdn.tailwindcss.com"></script>
