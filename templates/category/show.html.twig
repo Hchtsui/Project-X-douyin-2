@@ -22,8 +22,14 @@
                     <a href="{{ path('show_video', {'categoryId': categoryId}) }}" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
                         <i class="fas fa-eye"></i> Show Videos
                     </a>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <a href="{{ path('admin_dashboard') }}" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
+                            <i class="fas fa-tools"></i> Admin Panel
+                        </a>
+                    {% endif %}
                 </div>
             {% endif %}
+
 
             <div class="flex space-x-4 mb-4">
                 {% for cat in categories %}
@@ -42,13 +48,18 @@
                                     <iframe src="{{ video.url }}" frameborder="0" allowfullscreen></iframe>
                                 </div>
                                 <p class="text-sm text-gray-600">Tag: {{ video.tag }}</p>
-                                {% if is_granted('ROLE_USER') %}
-                                    <div class="mt-4">
+                                <div class="mt-4 space-x-2">
+                                    {% if is_granted('ROLE_USER') %}
                                         <a href="{{ path('edit_video', {'id': video.id, 'categoryId': categoryId}) }}" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded">
                                             <i class="fas fa-edit"></i> Edit Video
                                         </a>
-                                    </div>
-                                {% endif %}
+                                    {% endif %}
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                        <a href="{{ path('delete_video', {'id': video.id, 'categoryId': categoryId}) }}" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
+                                            <i class="fas fa-trash"></i> Delete Video
+                                        </a>
+                                    {% endif %}
+                                </div>
                             </li>
                         {% endfor %}
                     </ul>

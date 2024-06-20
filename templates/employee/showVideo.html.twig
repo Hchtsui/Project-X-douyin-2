@@ -9,6 +9,11 @@
         <a href="{{ path('category_page', {'id': categoryId}) }}" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded mb-4 inline-block">
             <i class="fas fa-arrow-left"></i> Back
         </a>
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('admin_dashboard') }}" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mb-4 inline-block">
+                <i class="fas fa-tachometer-alt"></i> Admin Panel
+            </a>
+        {% endif %}
         <div class="space-y-4">
             {% if videos is not empty %}
                 <ul class="space-y-4">
@@ -18,13 +23,17 @@
                             <p>{{ video.description }}</p>
                             <a href="{{ video.url }}" class="text-indigo-600 hover:text-indigo-900">{{ video.url }}</a>
                             <p class="text-sm text-gray-600">Tag: {{ video.tag }}</p>
-                            <div class="mt-4">
-                                <a href="{{ path('edit_video', {'id': video.id, 'categoryId': categoryId}) }}" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded">
-                                    <i class="fas fa-edit"></i> Edit Video
-                                </a>
-                                <a href="{{ path('delete_video', {'id': video.id, 'categoryId': categoryId}) }}" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
-                                    <i class="fas fa-trash"></i> Delete Video
-                                </a>
+                            <div class="mt-4 space-x-2">
+                                {% if is_granted('ROLE_USER') %}
+                                    <a href="{{ path('edit_video', {'id': video.id, 'categoryId': categoryId}) }}" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded">
+                                        <i class="fas fa-edit"></i> Edit Video
+                                    </a>
+                                {% endif %}
+                                {% if is_granted('ROLE_ADMIN') %}
+                                    <a href="{{ path('delete_video', {'id': video.id, 'categoryId': categoryId}) }}" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
+                                        <i class="fas fa-trash"></i> Delete Video
+                                    </a>
+                                {% endif %}
                             </div>
                         </li>
                     {% endfor %}

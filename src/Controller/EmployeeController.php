@@ -24,6 +24,7 @@ return $this->render('employee/index.html.twig', [
 }
 
 #[Route("/addvideo/{categoryId}", name: "add_video")]
+#[IsGranted('ROLE_USER')]
 public function addVideo(Request $request, EntityManagerInterface $em, int $categoryId): Response
 {
 $video = new Videos();
@@ -32,7 +33,7 @@ if (!$category) {
 throw $this->createNotFoundException('No category found for id ' . $categoryId);
 }
 
-$video->addCategory($category); // Correctly add the category to the video
+$video->addCategory($category);
 
 $form = $this->createForm(VideosType::class, $video);
 $form->handleRequest($request);
@@ -65,6 +66,7 @@ return $this->render('employee/showVideo.html.twig', [
 }
 
 #[Route('/editVideo/{id}/{categoryId}', name: 'edit_video')]
+#[IsGranted('ROLE_USER')]
 public function editVideo(int $id, int $categoryId, Request $request, EntityManagerInterface $em): Response
 {
 $video = $em->getRepository(Videos::class)->find($id);
@@ -89,6 +91,7 @@ return $this->render('employee/editVideo.html.twig', [
 }
 
 #[Route('/videos/delete/{id}/{categoryId}', name: 'delete_video')]
+#[IsGranted('ROLE_ADMIN')]
 public function deleteVideo(EntityManagerInterface $em, int $id, int $categoryId): Response
 {
 $video = $em->getRepository(Videos::class)->find($id);
