@@ -20,11 +20,12 @@ class Categories
     private ?string $name = null;
 
     #[ORM\ManyToMany(targetEntity: Videos::class, inversedBy: 'categories')]
-    private Collection $categorieShorts;
+    #[ORM\JoinTable(name: 'categories_videos')]
+    private Collection $videos;
 
     public function __construct()
     {
-        $this->categorieShorts = new ArrayCollection();
+        $this->videos = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -46,26 +47,31 @@ class Categories
     /**
      * @return Collection<int, Videos>
      */
-    public function getCategorieShorts(): Collection
+    public function getVideos(): Collection
     {
-        return $this->categorieShorts;
+        return $this->videos;
     }
 
-    public function addCategorieShorts(Videos $categorieShorts): static
+    public function addVideo(Videos $video): static
     {
-        if (!$this->categorieShorts->contains($categorieShorts)) {
-            $this->categorieShorts->add($categorieShorts);
+        if (!$this->videos->contains($video)) {
+            $this->videos->add($video);
+            $video->addCategory($this);
         }
 
         return $this;
     }
 
-    public function removeCategorieShorts(Videos $categorieShorts): static
+    public function removeVideo(Videos $video): static
     {
-        $this->categorieShorts->removeElement($categorieShorts);
+        if ($this->videos->removeElement($video)) {
+            $video->removeCategory($this);
+        }
+
         return $this;
     }
 }
+
 
 
 

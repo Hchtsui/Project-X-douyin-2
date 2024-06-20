@@ -41,7 +41,7 @@ class EmployeeController extends AbstractController
     }
 
     #[\Symfony\Component\Routing\Attribute\Route('/showVideo', name: 'show_video')]
-    public function showOrder(EntityManagerInterface $em): Response
+    public function showVideo(EntityManagerInterface $em): Response
     {
         $orders = $em->getRepository(Videos::class)->findAll();
         return $this->render('admin/index.html.twig', [

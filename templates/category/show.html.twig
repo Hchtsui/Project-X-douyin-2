@@ -1,3 +1,4 @@
+{# templates/category/show.html.twig #}
 {% extends 'base.html.twig' %}
 
 {% block title %}{{ category.name }}{% endblock %}
@@ -5,8 +6,29 @@
 {% block body %}
     <div class="flex justify-center h-screen">
         <div class="bg-black w-2/12"></div> <!-- Black bar on the left -->
-        <div class="flex flex-wrap justify-center w-8/12">
-            <h1 class="text-center text-2xl font-bold my-4">{{ category.name }}</h1>
+        <div class="flex flex-col items-center w-8/12">
+            <h1 class="text-2xl font-bold my-4">{{ category.name }}</h1>
+
+            <div class="flex space-x-4 mb-4">
+                <a href="{{ path('category_page', {'id': category.id, 'tags': '#All'}) }}"
+                   class="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded">All</a>
+                <a href="{{ path('category_page', {'id': category.id, 'tags': '#Funny'}) }}"
+                   class="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded">Funny</a>
+                <a href="{{ path('category_page', {'id': category.id, 'tags': '#Educational'}) }}"
+                   class="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded">Educational</a>
+            </div>
+
+            {% if not app.user %}
+                <div class="flex space-x-4 mb-4">
+                    <a class="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded" href="{{ path('app_register') }}">Register</a>
+                    <a class="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded" href="{{ path('app_login') }}">Login</a>
+                </div>
+            {% else %}
+                <div class="flex space-x-4 mb-4">
+                    <a class="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded" href="{{ path('app_logout') }}">Logout</a>
+                </div>
+            {% endif %}
+
             <div id="video-container" class="w-full mt-4">
                 {% if videos is not empty %}
                     <ul class="w-full flex flex-wrap justify-center">
@@ -14,15 +36,15 @@
                             <li class="bg-white m-2 p-4 rounded shadow-md w-1/3">
                                 <h3 class="text-lg font-semibold">{{ video.name }}</h3>
                                 <p>{{ video.description }}</p>
-                                <div class="video-embed">
-                                    <iframe width="100%" height="315" src="{{ video.url }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                <div class="video-wrapper">
+                                    <iframe src="{{ video.url }}" frameborder="0" allowfullscreen></iframe>
                                 </div>
                                 <p class="text-sm text-gray-600">Tag: {{ video.tag }}</p>
                             </li>
                         {% endfor %}
                     </ul>
                 {% else %}
-                    <p>No videos found for this category.</p>
+                    <p>No videos found for this category and tags.</p>
                 {% endif %}
             </div>
         </div>

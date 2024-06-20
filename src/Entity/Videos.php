@@ -1,5 +1,7 @@
 <?php
 
+// src/Entity/Videos.php
+
 namespace App\Entity;
 
 use App\Repository\VideosRepository;
@@ -28,21 +30,14 @@ class Videos
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $tag = null;
 
-    /**
-     * @var Collection<int, Categories>
-     */
-    #[ORM\ManyToMany(targetEntity: Categories::class, mappedBy: 'categorieShorts')]
+    #[ORM\ManyToMany(targetEntity: Categories::class, mappedBy: 'videos')]
     private Collection $categories;
 
-    /**
-     * @var Collection<int, Tags>
-     */
     #[ORM\ManyToMany(targetEntity: Tags::class, inversedBy: 'videos')]
     private Collection $tags;
 
     public function __construct()
     {
-        $this->User = new ArrayCollection();
         $this->categories = new ArrayCollection();
         $this->tags = new ArrayCollection();
     }
@@ -97,33 +92,6 @@ class Videos
     }
 
     /**
-     * @return Collection<int, User>
-     */
-    public function getUsers(): Collection
-    {
-        return $this->User;
-    }
-
-    public function addUser(User $user): static
-    {
-        if (!$this->User->contains($user)) {
-            $this->User->add($user);
-            $user->addVideo($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUser(User $user): static
-    {
-        if ($this->User->removeElement($user)) {
-            $user->removeVideo($this);
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection<int, Categories>
      */
     public function getCategories(): Collection
@@ -135,7 +103,7 @@ class Videos
     {
         if (!$this->categories->contains($category)) {
             $this->categories->add($category);
-            $category->addCategorieShorts($this);
+            $category->addVideo($this);
         }
 
         return $this;
@@ -144,7 +112,7 @@ class Videos
     public function removeCategory(Categories $category): static
     {
         if ($this->categories->removeElement($category)) {
-            $category->removeCategorieShorts($this);
+            $category->removeVideo($this);
         }
 
         return $this;
@@ -173,4 +141,7 @@ class Videos
         return $this;
     }
 }
+
+
+
 

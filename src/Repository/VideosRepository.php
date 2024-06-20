@@ -1,14 +1,13 @@
 <?php
 
+/// src/Repository/VideosRepository.php
+
 namespace App\Repository;
 
 use App\Entity\Videos;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @extends ServiceEntityRepository<Videos>
- */
 class VideosRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -16,28 +15,28 @@ class VideosRepository extends ServiceEntityRepository
         parent::__construct($registry, Videos::class);
     }
 
-//    /**
-//     * @return Videos[] Returns an array of Videos objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('v')
-//            ->andWhere('v.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('v.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * @param int $categoryId
+     * @param array $tagNames
+     * @return Videos[]
+     */
+    public function findByCategoryAndTags(int $categoryId, array $tagNames): array
+    {
+        $qb = $this->createQueryBuilder('v')
+            ->innerJoin('v.categories', 'c')
+            ->andWhere('c.id = :categoryId')
+            ->setParameter('categoryId', $categoryId);
 
-//    public function findOneBySomeField($value): ?Videos
-//    {
-//        return $this->createQueryBuilder('v')
-//            ->andWhere('v.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        if (!in_array('#All', $tagNames)) {
+            $tagConditions = [];
+            foreach ($tagNames as $index => $tagName) {
+                $tagConditions[] = $qb->expr()->like('v.tag', ':tag' . $index);
+                $qb->setParameter('tag' . $index, '%' . $tagName . '%');
+            }
+            $qb->andWhere(call_user_func_array([$qb->expr(), 'orX'], $tagConditions));
+        }
+
+        return $qb->getQuery()->getResult();
+    }
 }
+

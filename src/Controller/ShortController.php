@@ -1,10 +1,10 @@
 <?php
 
+// src/Controller/ShortController.php
+
 namespace App\Controller;
 
-use App\Entity\Orders;
 use App\Entity\Videos;
-use App\Form\VideosType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -21,5 +21,6 @@ class ShortController extends AbstractController
         return $this->json($videos);
     }
 }
+
 
 
