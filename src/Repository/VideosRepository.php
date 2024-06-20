@@ -1,6 +1,5 @@
 <?php
-
-/// src/Repository/VideosRepository.php
+// src/Repository/VideosRepository.php
 
 namespace App\Repository;
 
@@ -8,6 +7,9 @@ use App\Entity\Videos;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/**
+ * @extends ServiceEntityRepository<Videos>
+ */
 class VideosRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -27,16 +29,12 @@ class VideosRepository extends ServiceEntityRepository
             ->andWhere('c.id = :categoryId')
             ->setParameter('categoryId', $categoryId);
 
-        if (!in_array('#All', $tagNames)) {
-            $tagConditions = [];
-            foreach ($tagNames as $index => $tagName) {
-                $tagConditions[] = $qb->expr()->like('v.tag', ':tag' . $index);
-                $qb->setParameter('tag' . $index, '%' . $tagName . '%');
-            }
-            $qb->andWhere(call_user_func_array([$qb->expr(), 'orX'], $tagConditions));
+        if ($tagNames[0] !== '#All') {
+            $qb->innerJoin('v.tags', 't')
+                ->andWhere('t.name IN (:tagNames)')
+                ->setParameter('tagNames', $tagNames);
         }
 
         return $qb->getQuery()->getResult();
     }
 }
-

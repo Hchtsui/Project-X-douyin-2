@@ -7,27 +7,29 @@
     <div class="flex justify-center h-screen">
         <div class="bg-black w-2/12"></div> <!-- Black bar on the left -->
         <div class="flex flex-col items-center w-8/12">
-            <h1 class="text-2xl font-bold my-4">{{ category.name }}</h1>
-
-            <div class="flex space-x-4 mb-4">
-                <a href="{{ path('category_page', {'id': category.id, 'tags': '#All'}) }}"
-                   class="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded">All</a>
-                <a href="{{ path('category_page', {'id': category.id, 'tags': '#Funny'}) }}"
-                   class="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded">Funny</a>
-                <a href="{{ path('category_page', {'id': category.id, 'tags': '#Educational'}) }}"
-                   class="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded">Educational</a>
+            <div class="flex justify-between w-full my-4">
+                <a href="{{ path('home_page') }}" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded inline-flex items-center">
+                    <i class="fas fa-arrow-left"></i> Back to Home
+                </a>
+                <h1 class="text-2xl font-bold">{{ category.name }}</h1>
             </div>
 
-            {% if not app.user %}
+            {% if app.user %}
                 <div class="flex space-x-4 mb-4">
-                    <a class="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded" href="{{ path('app_register') }}">Register</a>
-                    <a class="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded" href="{{ path('app_login') }}">Login</a>
-                </div>
-            {% else %}
-                <div class="flex space-x-4 mb-4">
-                    <a class="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded" href="{{ path('app_logout') }}">Logout</a>
+                    <a href="{{ path('add_video', {'categoryId': categoryId}) }}" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+                        <i class="fas fa-plus"></i> Add Video
+                    </a>
+                    <a href="{{ path('show_video', {'categoryId': categoryId}) }}" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
+                        <i class="fas fa-eye"></i> Show Videos
+                    </a>
                 </div>
             {% endif %}
+
+            <div class="flex space-x-4 mb-4">
+                {% for cat in categories %}
+                    <a href="{{ path('category_page', {'id': cat.id}) }}" class="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded">{{ cat.name }}</a>
+                {% endfor %}
+            </div>
 
             <div id="video-container" class="w-full mt-4">
                 {% if videos is not empty %}
@@ -40,6 +42,13 @@
                                     <iframe src="{{ video.url }}" frameborder="0" allowfullscreen></iframe>
                                 </div>
                                 <p class="text-sm text-gray-600">Tag: {{ video.tag }}</p>
+                                {% if is_granted('ROLE_USER') %}
+                                    <div class="mt-4">
+                                        <a href="{{ path('edit_video', {'id': video.id, 'categoryId': categoryId}) }}" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded">
+                                            <i class="fas fa-edit"></i> Edit Video
+                                        </a>
+                                    </div>
+                                {% endif %}
                             </li>
                         {% endfor %}
                     </ul>

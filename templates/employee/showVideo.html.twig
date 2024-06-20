@@ -1,0 +1,37 @@
+{# templates/employee/showVideo.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Videos{% endblock %}
+
+{% block body %}
+    <div class="max-w-3xl mx-auto p-6 bg-white shadow-md rounded-md">
+        <h1 class="text-2xl font-bold mb-6">Videos</h1>
+        <a href="{{ path('category_page', {'id': categoryId}) }}" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded mb-4 inline-block">
+            <i class="fas fa-arrow-left"></i> Back
+        </a>
+        <div class="space-y-4">
+            {% if videos is not empty %}
+                <ul class="space-y-4">
+                    {% for video in videos %}
+                        <li class="bg-white p-4 rounded shadow-md">
+                            <h3 class="text-lg font-semibold">{{ video.name }}</h3>
+                            <p>{{ video.description }}</p>
+                            <a href="{{ video.url }}" class="text-indigo-600 hover:text-indigo-900">{{ video.url }}</a>
+                            <p class="text-sm text-gray-600">Tag: {{ video.tag }}</p>
+                            <div class="mt-4">
+                                <a href="{{ path('edit_video', {'id': video.id, 'categoryId': categoryId}) }}" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded">
+                                    <i class="fas fa-edit"></i> Edit Video
+                                </a>
+                                <a href="{{ path('delete_video', {'id': video.id, 'categoryId': categoryId}) }}" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
+                                    <i class="fas fa-trash"></i> Delete Video
+                                </a>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No videos found for this category.</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

@@ -1,91 +1,106 @@
 <?php
+// src/Controller/EmployeeController.php
 
 namespace App\Controller;
 
-use App\Entity\Orders;
+use App\Entity\Categories;
 use App\Entity\Videos;
 use App\Form\VideosType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 class EmployeeController extends AbstractController
 {
-    #[Route('/employee', name: 'app_employee')]
-    public function index(): Response
-    {
-        return $this->render('employee/index.html.twig', [
-            'controller_name' => 'EmployeeController',
-        ]);
-    }
-    #[Route("/addvideo", name: "add_video")]
-    public function addVideo(Request $request, EntityManagerInterface $em): Response
-    {
-        $form = $this->createForm(VideosType::class);
-        $form->handleRequest($request);
+#[Route('/employee', name: 'app_employee')]
+public function index(): Response
+{
+return $this->render('employee/index.html.twig', [
+'controller_name' => 'EmployeeController',
+]);
+}
 
-        if($form->isSubmitted() && $form->isValid()){
+#[Route("/addvideo/{categoryId}", name: "add_video")]
+public function addVideo(Request $request, EntityManagerInterface $em, int $categoryId): Response
+{
+$video = new Videos();
+$category = $em->getRepository(Categories::class)->find($categoryId);
+if (!$category) {
+throw $this->createNotFoundException('No category found for id ' . $categoryId);
+}
 
-            $video = $form->getData();
-            $em->persist($video);
-            $em->flush();
-            $this ->addFlash('success', 'Video added successfully');
+$video->addCategory($category); // Correctly add the category to the video
 
-            return $this->redirectToRoute('home_page');
-        }
-        return $this->render('employee/addvideo.html.twig', [
-            'form' => $form
-        ]);
-    }
+$form = $this->createForm(VideosType::class, $video);
+$form->handleRequest($request);
 
-    #[\Symfony\Component\Routing\Attribute\Route('/showVideo', name: 'show_video')]
-    public function showVideo(EntityManagerInterface $em): Response
-    {
-        $orders = $em->getRepository(Videos::class)->findAll();
-        return $this->render('admin/index.html.twig', [
-            'orders' => $orders
-        ]);
-    }
-#[Route("/editVideo/{id}", name: "edit_video")]
+if ($form->isSubmitted() && $form->isValid()) {
+$em->persist($video);
+$em->flush();
+$this->addFlash('success', 'Video added successfully');
 
-    public function editVideo(int $id, Request $request, EntityManagerInterface $em): Response
-    {
-        // Fetch the existing video entity
-        $video = $em->getRepository(Videos::class)->find($id);
+return $this->redirectToRoute('category_page', ['id' => $categoryId]);
+}
 
-        if (!$video) {
-            throw $this->createNotFoundException('Video not found');
-        }
+return $this->render('employee/addvideo.html.twig', [
+'form' => $form->createView(),
+'categoryId' => $categoryId,
+]);
+}
 
-        // Create the form with the existing video data
-        $form = $this->createForm(VideosType::class, $video);
-        $form->handleRequest($request);
+#[Route('/showVideo/{categoryId}', name: 'show_video')]
+#[IsGranted('ROLE_USER')]
+public function showVideo(EntityManagerInterface $em, int $categoryId): Response
+{
+$category = $em->getRepository(Categories::class)->find($categoryId);
+$videos = $category ? $category->getVideos() : [];
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            // Persist and flush the changes to the database
-            $em->flush();
-            $this->addFlash('success', 'Video updated successfully');
+return $this->render('employee/showVideo.html.twig', [
+'videos' => $videos,
+'categoryId' => $categoryId,
+]);
+}
 
-            return $this->redirectToRoute('home_page');
-        }
+#[Route('/editVideo/{id}/{categoryId}', name: 'edit_video')]
+public function editVideo(int $id, int $categoryId, Request $request, EntityManagerInterface $em): Response
+{
+$video = $em->getRepository(Videos::class)->find($id);
+if (!$video) {
+throw $this->createNotFoundException('Video not found');
+}
 
-        // Render the form
-        return $this->render('employee/editVideo.html.twig', [
-            'form' => $form->createView()
-        ]);
-    }
-    #[Route('/videos/delete/{id}', name: 'delete_videos')]
-    public function deleteProduct(EntityManagerInterface $em,int $id): Response
-    {
-        $video = $em->getRepository(Videos::class)->find($id);
-        $em->remove($video);
-        $em->flush();
+$form = $this->createForm(VideosType::class, $video);
+$form->handleRequest($request);
 
-        $this->addFlash('success', 'Product deleted');
+if ($form->isSubmitted() && $form->isValid()) {
+$em->flush();
+$this->addFlash('success', 'Video updated successfully');
 
-        return $this->redirectToRoute('home_page');
-    }
+return $this->redirectToRoute('category_page', ['id' => $categoryId]);
+}
 
+return $this->render('employee/editVideo.html.twig', [
+'form' => $form->createView(),
+'categoryId' => $categoryId,
+]);
+}
+
+#[Route('/videos/delete/{id}/{categoryId}', name: 'delete_video')]
+public function deleteVideo(EntityManagerInterface $em, int $id, int $categoryId): Response
+{
+$video = $em->getRepository(Videos::class)->find($id);
+if (!$video) {
+throw $this->createNotFoundException('Video not found');
+}
+
+$em->remove($video);
+$em->flush();
+
+$this->addFlash('success', 'Video deleted successfully');
+
+return $this->redirectToRoute('category_page', ['id' => $categoryId]);
+}
 }

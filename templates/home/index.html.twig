@@ -46,7 +46,7 @@
                             <div class="video-embed">
                                 <iframe class="w-full h-96" src="{{ video.url }}?autoplay=1&mute=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                             </div>
-                            <p class="text-sm text-gray-600">Tag: {{ video.tag }}</p>
+                            <p class="text-sm text-gray-600">Tag: {% for category in video.categories %}#{{ category.name }} {% endfor %}</p>
                         </div>
                     {% endfor %}
                 {% else %}
