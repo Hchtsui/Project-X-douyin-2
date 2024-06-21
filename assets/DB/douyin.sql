@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Gegenereerd op: 20 jun 2024 om 19:19
--- Serverversie: 10.4.28-MariaDB
--- PHP-versie: 8.0.28
+-- Host: 127.0.0.1
+-- Generation Time: Jun 21, 2024 at 10:38 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -26,28 +26,40 @@ USE `douyin`;
 -- --------------------------------------------------------
 
 --
--- Tabelstructuur voor tabel `categories`
+-- Table structure for table `categories`
 --
 
 DROP TABLE IF EXISTS `categories`;
 CREATE TABLE `categories` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Gegevens worden geëxporteerd voor tabel `categories`
+-- Dumping data for table `categories`
 --
 
 INSERT INTO `categories` (`id`, `name`) VALUES
 (1, 'All'),
-(2, 'Funny'),
-(3, 'Educational');
+(2, 'funny'),
+(3, 'educational');
 
 -- --------------------------------------------------------
 
 --
--- Tabelstructuur voor tabel `doctrine_migration_versions`
+-- Table structure for table `categories_videos`
+--
+
+DROP TABLE IF EXISTS `categories_videos`;
+CREATE TABLE `categories_videos` (
+  `categories_id` int(11) NOT NULL,
+  `videos_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `doctrine_migration_versions`
 --
 
 DROP TABLE IF EXISTS `doctrine_migration_versions`;
@@ -58,7 +70,7 @@ CREATE TABLE `doctrine_migration_versions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Gegevens worden geëxporteerd voor tabel `doctrine_migration_versions`
+-- Dumping data for table `doctrine_migration_versions`
 --
 
 INSERT INTO `doctrine_migration_versions` (`version`, `executed_at`, `execution_time`) VALUES
@@ -69,7 +81,7 @@ INSERT INTO `doctrine_migration_versions` (`version`, `executed_at`, `execution_
 -- --------------------------------------------------------
 
 --
--- Tabelstructuur voor tabel `messenger_messages`
+-- Table structure for table `messenger_messages`
 --
 
 DROP TABLE IF EXISTS `messenger_messages`;
@@ -86,7 +98,7 @@ CREATE TABLE `messenger_messages` (
 -- --------------------------------------------------------
 
 --
--- Tabelstructuur voor tabel `tags`
+-- Table structure for table `tags`
 --
 
 DROP TABLE IF EXISTS `tags`;
@@ -96,7 +108,7 @@ CREATE TABLE `tags` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Gegevens worden geëxporteerd voor tabel `tags`
+-- Dumping data for table `tags`
 --
 
 INSERT INTO `tags` (`id`, `name`) VALUES
@@ -105,7 +117,7 @@ INSERT INTO `tags` (`id`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tabelstructuur voor tabel `user`
+-- Table structure for table `user`
 --
 
 DROP TABLE IF EXISTS `user`;
@@ -117,17 +129,17 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Gegevens worden geëxporteerd voor tabel `user`
+-- Dumping data for table `user`
 --
 
 INSERT INTO `user` (`id`, `email`, `roles`, `password`) VALUES
-(1, '302139184@student.rocmondriaan.nl', '[]', '$2y$13$K/.WYTg9uXpERqMuwlcWb.j.BcjdFosRJNSPOi0qCuPPmi0K9EyQ.'),
-(2, 'henry@gmail.com', '[\"ROLE_ADMIN\"]', '$2y$13$3s5NGfu7x7l187W3pDTNA.ZxpFHggw2cSvgKJAtN6.XKRDW.vDD8e');
+(1, '302139184@student.rocmondriaan.nl', '[\"ROLE_USER\",\"ROLE_EMPLOYEE\"]', '$2y$13$NSMFrGgZ78N9kECPUNwzl.QNh/irRrDghGFCkcPwbqh/tGigCvTwe'),
+(2, 'henry@gmail.com', '{\"1\":\"ROLE_USER\",\"0\":\"ROLE_ADMIN\",\"2\":\"ROLE_EMPLOYEE\"}', '$2y$13$O.k/7bIAQO5Jadk1ft2gD.42yUnlGxiFdHI1tBHY23oUsWgDADbYW');
 
 -- --------------------------------------------------------
 
 --
--- Tabelstructuur voor tabel `videos`
+-- Table structure for table `videos`
 --
 
 DROP TABLE IF EXISTS `videos`;
@@ -140,16 +152,30 @@ CREATE TABLE `videos` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Gegevens worden geëxporteerd voor tabel `videos`
+-- Dumping data for table `videos`
 --
 
 INSERT INTO `videos` (`id`, `name`, `description`, `url`, `tag`) VALUES
-(1, 'Learning', 'look at this', 'https://www.youtube.com/embed/Hnx5rET4ZE8?si=Q9h-v7s2D3nZie7h', '#Educational');
+(1, 'Tiktok', 'learning', 'https://www.youtube.com/embed/RzotwAImsas?si=7A4mks_axxt3cyxT', '#Educational'),
+(11, 'joe mama', 'ahwww jaaaa', 'https://www.youtube.com/embed/T-o_S4EInOg?si=LnFJPq-9uAsUBPZP', '#Funny'),
+(12, 'How TikTok\'s Algorithm Figures You Out | WSJ', 'The Wall Street Journal created dozens of automated accounts that watched hundreds of thousands of videos to reveal how the the TikTok algorithm knows you so well.\r\n\r\nA Wall Street Journal investigation found that TikTok only needs one important piece of information to figure out what you want: the amount of time you linger over a piece of content. Every second you hesitate or rewatch, the app is tracking you. \r\n\r\nPhoto illustration: Laura Kammermann/The Wall Street Journal\r\n\r\nWSJ video investigations use visual evidence to reveal the truth behind the most important stories of the day.\r\n\r\nInside TikTok’s Highly Secretive Algorithm\r\nThis WSJ video investigation reveals how the video-centric social network is so good at figuring out interests you never expressly tell it.', 'https://www.youtube.com/embed/nfczi2cI6Cs?si=0g7WXjaYO_cVPRQe', '#Educational');
 
 -- --------------------------------------------------------
 
 --
--- Tabelstructuur voor tabel `video_category`
+-- Table structure for table `videos_tags`
+--
+
+DROP TABLE IF EXISTS `videos_tags`;
+CREATE TABLE `videos_tags` (
+  `videos_id` int(11) NOT NULL,
+  `tags_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `video_category`
 --
 
 DROP TABLE IF EXISTS `video_category`;
@@ -159,17 +185,21 @@ CREATE TABLE `video_category` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Gegevens worden geëxporteerd voor tabel `video_category`
+-- Dumping data for table `video_category`
 --
 
 INSERT INTO `video_category` (`videos_id`, `categories_id`) VALUES
-(1, 2),
-(1, 3);
+(1, 1),
+(1, 3),
+(11, 1),
+(11, 2),
+(12, 1),
+(12, 3);
 
 -- --------------------------------------------------------
 
 --
--- Tabelstructuur voor tabel `video_tag`
+-- Table structure for table `video_tag`
 --
 
 DROP TABLE IF EXISTS `video_tag`;
@@ -179,30 +209,38 @@ CREATE TABLE `video_tag` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Gegevens worden geëxporteerd voor tabel `video_tag`
+-- Dumping data for table `video_tag`
 --
 
 INSERT INTO `video_tag` (`videos_id`, `tags_id`) VALUES
 (1, 1);
 
 --
--- Indexen voor geëxporteerde tabellen
+-- Indexes for dumped tables
 --
 
 --
--- Indexen voor tabel `categories`
+-- Indexes for table `categories`
 --
 ALTER TABLE `categories`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexen voor tabel `doctrine_migration_versions`
+-- Indexes for table `categories_videos`
+--
+ALTER TABLE `categories_videos`
+  ADD PRIMARY KEY (`categories_id`,`videos_id`),
+  ADD KEY `IDX_21C35A0AA21214B7` (`categories_id`),
+  ADD KEY `IDX_21C35A0A763C10B2` (`videos_id`);
+
+--
+-- Indexes for table `doctrine_migration_versions`
 --
 ALTER TABLE `doctrine_migration_versions`
   ADD PRIMARY KEY (`version`);
 
 --
--- Indexen voor tabel `messenger_messages`
+-- Indexes for table `messenger_messages`
 --
 ALTER TABLE `messenger_messages`
   ADD PRIMARY KEY (`id`),
@@ -211,26 +249,34 @@ ALTER TABLE `messenger_messages`
   ADD KEY `IDX_75EA56E016BA31DB` (`delivered_at`);
 
 --
--- Indexen voor tabel `tags`
+-- Indexes for table `tags`
 --
 ALTER TABLE `tags`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexen voor tabel `user`
+-- Indexes for table `user`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `UNIQ_IDENTIFIER_EMAIL` (`email`);
 
 --
--- Indexen voor tabel `videos`
+-- Indexes for table `videos`
 --
 ALTER TABLE `videos`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexen voor tabel `video_category`
+-- Indexes for table `videos_tags`
+--
+ALTER TABLE `videos_tags`
+  ADD PRIMARY KEY (`videos_id`,`tags_id`),
+  ADD KEY `IDX_CD9528D2763C10B2` (`videos_id`),
+  ADD KEY `IDX_CD9528D28D7B4FB4` (`tags_id`);
+
+--
+-- Indexes for table `video_category`
 --
 ALTER TABLE `video_category`
   ADD PRIMARY KEY (`videos_id`,`categories_id`),
@@ -238,7 +284,7 @@ ALTER TABLE `video_category`
   ADD KEY `IDX_AECE2B7DA21214B7` (`categories_id`);
 
 --
--- Indexen voor tabel `video_tag`
+-- Indexes for table `video_tag`
 --
 ALTER TABLE `video_tag`
   ADD PRIMARY KEY (`videos_id`,`tags_id`),
@@ -246,52 +292,66 @@ ALTER TABLE `video_tag`
   ADD KEY `IDX_F91072878D7B4FB4` (`tags_id`);
 
 --
--- AUTO_INCREMENT voor geëxporteerde tabellen
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT voor een tabel `categories`
+-- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT voor een tabel `messenger_messages`
+-- AUTO_INCREMENT for table `messenger_messages`
 --
 ALTER TABLE `messenger_messages`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT voor een tabel `tags`
+-- AUTO_INCREMENT for table `tags`
 --
 ALTER TABLE `tags`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT voor een tabel `user`
+-- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT voor een tabel `videos`
+-- AUTO_INCREMENT for table `videos`
 --
 ALTER TABLE `videos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
--- Beperkingen voor geëxporteerde tabellen
+-- Constraints for dumped tables
 --
 
 --
--- Beperkingen voor tabel `video_category`
+-- Constraints for table `categories_videos`
+--
+ALTER TABLE `categories_videos`
+  ADD CONSTRAINT `FK_21C35A0A763C10B2` FOREIGN KEY (`videos_id`) REFERENCES `videos` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_21C35A0AA21214B7` FOREIGN KEY (`categories_id`) REFERENCES `categories` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `videos_tags`
+--
+ALTER TABLE `videos_tags`
+  ADD CONSTRAINT `FK_CD9528D2763C10B2` FOREIGN KEY (`videos_id`) REFERENCES `videos` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_CD9528D28D7B4FB4` FOREIGN KEY (`tags_id`) REFERENCES `tags` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `video_category`
 --
 ALTER TABLE `video_category`
   ADD CONSTRAINT `FK_AECE2B7D763C10B2` FOREIGN KEY (`videos_id`) REFERENCES `videos` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `FK_AECE2B7DA21214B7` FOREIGN KEY (`categories_id`) REFERENCES `categories` (`id`) ON DELETE CASCADE;
 
 --
--- Beperkingen voor tabel `video_tag`
+-- Constraints for table `video_tag`
 --
 ALTER TABLE `video_tag`
   ADD CONSTRAINT `FK_F9107287763C10B2` FOREIGN KEY (`videos_id`) REFERENCES `videos` (`id`) ON DELETE CASCADE,
